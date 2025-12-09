@@ -13,9 +13,10 @@ Instead of jumping straight into modeling, this project performs rigorous **Data
 * **Feature Engineering:** Reduced dimensionality by condensing 44 binary columns into categorical variables.
 
 ## 2. Dataset
-* **Source:** A modified version of the Covertype dataset from the UCI Machine Learning Repository.
-* **Note:** This specific dataset includes intentionally introduced noise and missing values to simulate real-world data cleaning challenges, distinct from the clean version found on Kaggle.
-* **Target:** Forest Cover Type (7 classes, e.g., Spruce/Fir, Lodgepole Pine).
+* **Dataset Used:** A modified, "messy" version of the Forest Cover Type dataset (included in this repo as `forest_cover.csv`).
+* **Original Source:** [Forest Cover Type Prediction (Kaggle/UCI)](https://www.kaggle.com/c/forest-cover-type-prediction/data)
+* **⚠️ Important Note:** The code in this repository is specifically engineered to handle the **noise and missing values introduced in the modified dataset**. It is **NOT** directly compatible with the clean version found on Kaggle without adjustments.
+* **Target:** Forest Cover Type (7 classes).
 * **Key Features:** Elevation, Aspect, Slope, Distances to Hydrology/Roadways, Hillshade, Soil Type.
 
 ## 3. Tech Stack
