@@ -19,7 +19,7 @@ Instead of jumping straight into modeling, this project performs rigorous **Data
 * **Key Features:** Elevation, Aspect, Slope, Distances to Hydrology/Roadways, Hillshade, Soil Type.
 
 ## 3. Tech Stack
-* **Language:** Python 3.x
+* **Language:** Python
 * **Libraries:** Pandas, NumPy, Matplotlib, Seaborn, Scikit-learn
 
 ## 4. Methodology (Data Cleaning Pipeline)
