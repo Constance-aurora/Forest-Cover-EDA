@@ -41,13 +41,13 @@ The raw data presented significant quality issues. The cleaning pipeline impleme
 Through comprehensive EDA, the following patterns were identified to guide future modeling:
 
 ### 1. Elevation is the Key Predictor
-Boxplot analysis reveals distinct elevation bands for different forest types. *Krummholz* is found at the highest elevations, while *Cottonwood/Willow* dominates the lowest.
+Boxplot analysis reveals distinct elevation bands for different forest types. For instance, *Krummholz* is consistently found at the highest elevations, while *Cottonwood/Willow* dominates the lowest elevations. This clear separation suggests that Elevation will likely be the most important feature in any decision-tree based model.
 
-### 2. Feature Correlations
-Strong correlations were found between Hillshade variables (9am vs 3pm) and Hydrology distances. This suggests that future linear models will require feature selection or PCA to avoid multicollinearity.
+### 2. Feature Correlations and Multicollinearity
+The correlation matrix indicates strong relationships between Hillshade variables (specifically 9am vs 3pm) and Hydrology distances. This suggests that future linear models would require dimensionality reduction (like PCA) or rigorous feature selection to avoid multicollinearity issues.
 
 ### 3. Class Imbalance
-The target variable is heavily skewed towards *Lodgepole Pine* and *Spruce/Fir*. Any future predictive model must employ **SMOTE** or **Class Weighting** to avoid bias against minority forest types.
+The target variable analysis shows a heavy skew towards *Lodgepole Pine* and *Spruce/Fir*. The other five forest types are underrepresented. Any future predictive model must employ techniques like **SMOTE** (Synthetic Minority Over-sampling Technique) or **Class Weighting** to prevent the model from ignoring the minority forest types.
 
 ## 6. Future Work / Next Steps
 With the data now cleaned and patterns identified, the next stages of this project would involve:
