@@ -1,39 +1,64 @@
-# Forest Cover Type Prediction & Geospatial Analysis
+# Forest Cover Type: Geospatial Data Cleaning & EDA Pipeline
 
 ## 1. Project Overview & Business Context
-In the context of wildfire management (e.g., recent Southern California Wildfires and Australian Black Summer Bushfires), accurate environmental models are crucial for risk assessment. Modern forestry relies heavily on drones for inspection. 
+In the domain of wildfire management and ecological monitoring, the quality of data determines the accuracy of predictive models. Real-world sensor data is often messy, containing noise, outliers, and missing values.
 
-**Objective:** This project aims to predict forest cover types (e.g., Spruce/Fir, Lodgepole Pine) based on cartographic variables (Elevation, Slope, Soil Type, etc.) that can be captured by drones. This analysis assists stakeholders—such as land management agencies and environmental scientists—in monitoring forest health and designing fire prevention strategies.
+**Objective:** This project focuses on the **critical "Stage 1" of the Data Science lifecycle**: transforming a raw, noisy dataset of cartographic variables (Elevation, Slope, Soil Type) into a high-quality, analysis-ready format.
+
+Instead of jumping straight into modeling, this project performs rigorous **Data Quality Assurance** and **Exploratory Data Analysis (EDA)** to determine which geospatial features are most viable for predicting forest cover types in the Roosevelt National Forest.
+
+**Key Achievements:**
+* **Domain-Driven Cleaning:** Handled complex missing data patterns using domain-specific imputation strategies (Wilderness-Area based).
+* **Outlier Detection:** Identified and removed geospatial outliers that could bias future models.
+* **Feature Engineering:** Reduced dimensionality by condensing 44 binary columns into categorical variables.
 
 ## 2. Dataset
-* **Source:** Subset of the Covertype dataset from the UCI Machine Learning Repository (Roosevelt National Forest, Colorado).
-* **Size:** 30,860 instances, 54 attributes.
-* **Key Features:** * Cartographic: Elevation, Aspect, Slope, Distances to Hydrology/Roadways/Fire Points.
-    * Categorical: Wilderness Area (4 types), Soil Type (40 types).
-* **Target:** Forest Cover Type (7 classes).
+* **Source:** A modified version of the Covertype dataset from the UCI Machine Learning Repository.
+* **Note:** This specific dataset includes intentionally introduced noise and missing values to simulate real-world data cleaning challenges, distinct from the clean version found on Kaggle.
+* **Target:** Forest Cover Type (7 classes, e.g., Spruce/Fir, Lodgepole Pine).
+* **Key Features:** Elevation, Aspect, Slope, Distances to Hydrology/Roadways, Hillshade, Soil Type.
 
 ## 3. Tech Stack
-* **Language:** Python
+* **Language:** Python 3.x
 * **Libraries:** Pandas, NumPy, Matplotlib, Seaborn, Scikit-learn
 
-## 4. Methodology (Data Cleaning & Preprocessing)
-The raw data contained missing values, outliers, and irrelevant columns. Key cleaning steps included:
+## 4. Methodology (Data Cleaning Pipeline)
+The raw data presented significant quality issues. The cleaning pipeline implemented in `forest_cover_eda.ipynb` includes:
 
-* **Categorical Engineering:** * Condensed 40 binary `Soil_Type` columns and 4 `Wilderness_Area` columns into single categorical features to reduce dimensionality.
-    * Handled missing soil types by assigning an "Unknown" category.
-* **Advanced Imputation:** * Applied **Wilderness-Area-Based Median Imputation** for numerical features. This approach was chosen because geographical features (like elevation) are geographically clustered; using the median of the specific wilderness area prevents bias from outliers.
-* **Outlier Removal:** * Used the IQR method (Interquartile Range) to remove definite outliers (beyond 3*IQR), reducing noise in Slope and Hillshade features.
+1.  **Categorical Data Processing:**
+    * Merged 40 one-hot encoded `Soil_Type` columns into a single categorical feature.
+    * Merged 4 `Wilderness_Area` columns into a single feature.
+    * Handled zero-vectors in soil types by assigning an "Unknown" category.
 
-## 5. Key Insights (EDA)
-Exploratory Data Analysis revealed several critical patterns for modeling:
+2.  **Advanced Imputation Strategy:**
+    * Instead of a simple mean/median fill, **Wilderness-Area-Based Median Imputation** was used.
+    * *Rationale:* Geospatial features like Elevation vary significantly between wilderness areas. Using the global median would introduce bias; grouping by area preserves the local environmental characteristics.
 
-* **Elevation is the Key Predictor:** Boxplot analysis shows clear separation of forest types based on elevation. For instance, *Krummholz* is found at the highest elevations, while *Cottonwood/Willow* dominates the lowest.
-* **Class Imbalance:** The dataset is heavily skewed towards *Lodgepole Pine* and *Spruce/Fir*. Future modeling will require stratification or class weighting to prevent overfitting.
-* **Geospatial Correlations:** * *Distance to Roadways/Fire Points:* Krummholz and Spruce/Fir tend to be located further from infrastructure compared to other types.
-    * *Multicollinearity:* Strong correlations were found between Hillshade variables (9am vs 3pm) and Hydrology distances, suggesting feature selection/reduction (PCA) might be needed for linear models.
+3.  **Outlier Removal:**
+    * Applied the IQR (Interquartile Range) method (threshold: 3 * IQR) to remove extreme outliers in `Slope` and `Hillshade` which were identified as measurement errors.
 
-## 6. Project Structure
-```text
-├── forest_cover_eda.ipynb   # Main analysis notebook (Cleaning + EDA)
-├── forest_cover.csv         # Raw dataset
-└── README.md                # Project documentation
+## 5. Key Analytical Insights (EDA)
+Through comprehensive EDA, the following patterns were identified to guide future modeling:
+
+### 1. Elevation is the Key Predictor
+Boxplot analysis reveals distinct elevation bands for different forest types. *Krummholz* is found at the highest elevations, while *Cottonwood/Willow* dominates the lowest.
+
+### 2. Feature Correlations
+Strong correlations were found between Hillshade variables (9am vs 3pm) and Hydrology distances. This suggests that future linear models will require feature selection or PCA to avoid multicollinearity.
+
+### 3. Class Imbalance
+The target variable is heavily skewed towards *Lodgepole Pine* and *Spruce/Fir*. Any future predictive model must employ **SMOTE** or **Class Weighting** to avoid bias against minority forest types.
+
+## 6. Future Work / Next Steps
+With the data now cleaned and patterns identified, the next stages of this project would involve:
+1.  **Feature Selection:** Removing highly correlated features identified in the Heatmap.
+2.  **Model Selection:** Training a **Random Forest** or **XGBoost** classifier, as these models handle non-linear geospatial relationships better than linear regression.
+3.  **Pipeline Automation:** Building a scikit-learn `Pipeline` to automate the cleaning steps defined in this notebook for production use.
+
+## 7. How to Run
+1.  Clone the repository.
+2.  Ensure `forest_cover.csv` is in the same directory.
+3.  Run the Jupyter Notebook:
+    ```bash
+    jupyter notebook forest_cover_eda.ipynb
+    ```
